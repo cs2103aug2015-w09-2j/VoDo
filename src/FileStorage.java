@@ -47,41 +47,60 @@ public class FileStorage {
 		}
 	}
 	
-	public ArrayList<String> display(){
+	public FileData display(){
+		FileData data = getData();
 		
-		ArrayList<String> list = readFile();
+		return data;
+		
+	}
+	
+	public FileData search(String keyword){
+		FileData list = searchFile(keyword);
+		
 		return list;
 	}
 	
-	public ArrayList<String> search(String keyword){
-		ArrayList<String> list = searchFile(keyword);
+	public void delete(String line, FileData data){
 		
-		return list;
-	}
-	
-	public String delete(String line){
-		
-		String lineDeleted;
 		String fileName = filePath;
+		
+		TreeMap<String, Integer> originalMap = data.getOriginalMap();
+		TreeMap<Integer, String> displayMap = data.getDisplayMap();
 		
 		try{
 			int numLine = Integer.parseInt(line);
 			
-			if(isValidNumLine(numLine, fileName)){
-				lineDeleted = "Invalid line number";
-				System.out.println("Invalid line number");
-			}else{
-				String deletedLine = findLine(numLine, fileName);
-				deleteLine(numLine, fileName);
-				lineDeleted = "deleted from " + fileName + ": \"" + deletedLine + "\"";
-				System.out.println("deleted from " + fileName + ": \"" + deletedLine + "\"");
-			}
+			String key = displayMap.get(numLine);
+			System.out.println(key);
+			int deleteNum = originalMap.get(key);
+			
+			String deletedLine = findLine(deleteNum, fileName);
+			deleteLine(deleteNum, fileName);
+				
+			System.out.println("deleted from " + fileName + ": \"" + deletedLine + "\"");
+			
 		}catch(NumberFormatException e){
-			lineDeleted = "Invalid line number";
-			System.out.println("Invalid line number");
+			
+			System.out.println("Errpr Deleting");
 		}
 		
-		return lineDeleted;
+	}
+	
+	public FileData getData(){
+		ArrayList<String> list = readFile();	
+		TreeMap<String, Integer> originalMap = new TreeMap<String, Integer>();
+		
+		for(int i=0; i<list.size(); i++){
+			originalMap.put(list.get(i), i+1);
+		}
+		Collections.sort(list);
+		TreeMap<Integer, String> displayMap = new TreeMap<Integer, String>();
+		for(int i=0; i<list.size(); i++){
+			displayMap.put(i+1,list.get(i));
+		}
+		
+		FileData data = new FileData(originalMap, displayMap);
+		return data;
 	}
 	
 
@@ -204,9 +223,19 @@ public class FileStorage {
 	}
 	//Private methods
 	
-	private static ArrayList<String> searchFile(String keyword){
+	private static FileData searchFile(String keyword){
+		
 		String line = null;
-        ArrayList<String> list = new ArrayList<String>();
+		ArrayList<String> list = readFile();	
+		TreeMap<String, Integer> originalMap = new TreeMap<String, Integer>();
+		
+		
+        
+        
+		TreeMap<Integer, String> displayMap = new TreeMap<Integer, String>();
+		ArrayList<String> keywordList = new ArrayList<String>();
+		
+		
         try {
         	
             FileReader fileReader = new FileReader(filePath);
@@ -215,7 +244,7 @@ public class FileStorage {
 			
 			while((line = bufferedReader.readLine()) != null) {
 				if(line.contains(keyword)){
-					list.add(line);
+					keywordList.add(line);
 				}
 			}			
             bufferedReader.close();   
@@ -227,7 +256,17 @@ public class FileStorage {
             System.out.println("Error reading file '" + filePath + "'");                   
         }
         
-		return list;
+        for(int i=0; i<list.size(); i++){
+			originalMap.put(list.get(i), i+1);
+		}
+        
+        for(int i=0; i<keywordList.size(); i++){
+			displayMap.put(i+1, keywordList.get(i));
+		}
+        
+        FileData data = new FileData(originalMap, displayMap);
+        
+		return data;
 	}
 	
 	private static boolean isFileEmpty(File fileName){
