@@ -11,10 +11,6 @@ import java.util.*;
  */
 public  class DateHandler {
 
-	public static void main(String[] args) throws NoSuchFieldException, ParseException{
-		System.out.println(getStringDayNow());
-		
-	}
 
 	public static final int NOT_FOUND = -1;
 	
