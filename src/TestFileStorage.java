@@ -14,9 +14,9 @@ public class TestFileStorage {
 	public static FileStorage file;
 	public static FileData data;
 	
-	public void main(){
-		
-		
+	public static void main(String args[]){
+
+	
 		
 		file = new FileStorage();
 		data = new FileData();
