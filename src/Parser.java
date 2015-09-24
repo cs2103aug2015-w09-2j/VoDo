@@ -1,3 +1,8 @@
+/***
+ * 
+ * @author Razali
+ *
+ */
 
 public class Parser {
 	
@@ -82,17 +87,17 @@ public class Parser {
 		return CommandType.TaskTypes.UNKNOWN;
 	}
 	
-	//Not done
+	
 	public static String getDescription(String strCommand){
 		return null;
 	}
 	
 	
-	//Not done
+	
 	public static String getDate(String strCommand){
 		return null;
 	}
-	//Not done
+	
 	public static void getTime(String strCommand){
 		return;
 	}

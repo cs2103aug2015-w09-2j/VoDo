@@ -1,10 +1,15 @@
 
+/***
+ * 
+ * @author Razali
+ *
+ */
 public class CommandType {
 
 	//To be used by parser and logic
 	public static enum Types{
 		ADD_DEADLINE("-d"), ADD_EVENT("-e"), ADD_FLOATING("-f"),
-		UPDATE("update"), DELETE("delete"), READ("display"), UNKNOWN("");
+		UPDATE("update"), DELETE("delete"), DISPLAY("display"), UNKNOWN("");
 		
 		private String strCommand;
 		
