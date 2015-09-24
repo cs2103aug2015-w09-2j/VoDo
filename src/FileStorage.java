@@ -11,19 +11,30 @@ public class FileStorage {
 	private static String pathDir;
 	private static String pathName;
 	
+	/**
+	 * This constructor gets the file storage path at the start of the application
+	 */
 	public FileStorage(){
 		pathDir = System.getProperty("user.home") + "\\VODO_Path";
 		pathName = "\\path.txt";
 		filePath = currFilePath();
 
 	}
-
-	public void add(String text){
-		write(text, filePath, true, true);
+	
+	/**
+	 * This method writes the user's input text data into the storage file
+	 * @param text data to be written into file
+	 */
+	public void write(String text){
+		writeFile(text, filePath, true, true);
 	}
 	
+	/**
+	 * This methods updates and set the new storage file path
+	 * @param newPath the new storage location which the user wants to store his data
+	 */
 	public void setFilePath(String newPath){
-		write(newPath, pathDir + pathName, false, false);
+		writeFile(newPath, pathDir + pathName, false, false);
 		
 		File newFile = new File(newPath);
 		createFile(newFile);
@@ -31,10 +42,18 @@ public class FileStorage {
 		filePath = newPath;
 	}
 	
+	/**
+	 * The methods retrieve and return the current directory of the storage file
+	 * @return the directory of the storage file
+	 */
 	public String getFilePath(){
 		return filePath;
 	}
 	
+	/**
+	 * This methods copy the content of the old file to a new file
+	 * @param newPath the directory of the new storage file
+	 */
 	public void copyFile(String newPath){
 		
 		File oldFile = new File(filePath);
@@ -42,11 +61,16 @@ public class FileStorage {
 		try {
 			Files.copy(oldFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			System.out.println("Copy File Fail");			
+			System.out.println("Copy file fail");			
+		} finally {
+			
 		}
 	}
 	
+	/**
+	 * This methods retrieve and returns the content of the storage file
+	 * @return the content of the storage file
+	 */
 	public FileData display(){
 		FileData data = getData();
 		
@@ -54,47 +78,61 @@ public class FileStorage {
 		
 	}
 	
+	/**
+	 * This methods retrieve and returns the content of the storage file
+	 * which contains a particular key word
+	 * @param keyword the key word to find a specific content in the storage file
+	 * @return the content of the storage file which contains only the key word
+	 */
 	public FileData search(String keyword){
 		FileData list = searchFile(keyword);
 		
 		return list;
 	}
 	
+	/**
+	 * This methods delete a specific line of the content in the storage file
+	 * @param line the line number of the line which is to be deleted
+	 * @param data the FileData which contains the hash map that links the line 
+	 * number to content of the storage file
+	 */
 	public void delete(String line, FileData data){
 		
 		String fileName = filePath;
 		
-		TreeMap<String, Integer> originalMap = data.getOriginalMap();
-		TreeMap<Integer, String> displayMap = data.getDisplayMap();
+		HashMap<String, Integer> originalMap = data.getOriginalMap();
+		HashMap<Integer, String> displayMap = data.getDisplayMap();
 		
 		try{
 			int numLine = Integer.parseInt(line);
-			
 			String key = displayMap.get(numLine);
-			System.out.println(key);
 			int deleteNum = originalMap.get(key);
 			
-			String deletedLine = findLine(deleteNum, fileName);
 			deleteLine(deleteNum, fileName);
 				
-			System.out.println("deleted from " + fileName + ": \"" + deletedLine + "\"");
-			
 		}catch(NumberFormatException e){
 			
-			System.out.println("Errpr Deleting");
+			System.out.println("Error deleting");
 		}
 		
 	}
 	
+	/**
+	 * This methods gets the content of the storage file
+	 * Create a hash map to map the original content of the storage file to its original sequence
+	 * Create a hash map to map the content in its new sequence which is sorted in ascending order
+	 * Create a new FileData to store the two hash map
+	 * @return the FileData which contents two hash map
+	 */
 	public FileData getData(){
 		ArrayList<String> list = readFile();	
-		TreeMap<String, Integer> originalMap = new TreeMap<String, Integer>();
+		HashMap<String, Integer> originalMap = new HashMap<String, Integer>();
 		
 		for(int i=0; i<list.size(); i++){
 			originalMap.put(list.get(i), i+1);
 		}
 		Collections.sort(list);
-		TreeMap<Integer, String> displayMap = new TreeMap<Integer, String>();
+		HashMap<Integer, String> displayMap = new HashMap<Integer, String>();
 		for(int i=0; i<list.size(); i++){
 			displayMap.put(i+1,list.get(i));
 		}
@@ -103,12 +141,11 @@ public class FileStorage {
 		return data;
 	}
 	
-
 	
-	
-	//Private class
-	//--------------------------------------------------------------------------------------------
-	
+	/**
+	 * This method retrieves and return the current directory of the storage file
+	 * @return the current directory of the storage file
+	 */
 	private static String currFilePath(){
 		
 		String defaultDataPath = System.getProperty("user.home") + "\\VODO\\data.txt";
@@ -116,15 +153,12 @@ public class FileStorage {
 		File pathFile = new File(pathDir + pathName);
 		File dataFile = new File(defaultDataPath);
 		String filePath;
-		
-		
-		
+				
 		if(!pathFile.exists()){				
 			createFile(pathFile);
 			createFile(dataFile);
 			hideFolder(pathDir);
-			write(defaultDataPath, pathDir + pathName, false, false);
-					
+			writeFile(defaultDataPath, pathDir + pathName, false, false);				
 		}
 	
 		filePath = readPath(pathDir + pathName);
@@ -132,6 +166,10 @@ public class FileStorage {
 		return filePath;
 	}
 	
+	/**
+	 * This methods create a new file and folder it they do not exist in the system
+	 * @param file contains the information of the file name to be created
+	 */
 	private static void createFile(File file){
 		if(!file.exists()){	 
 		     file.getParentFile().mkdirs();
@@ -139,10 +177,16 @@ public class FileStorage {
 				file.createNewFile();			
 		     }catch (IOException e) {
 		    	 System.out.println("Create File Fail");
+		     }finally{
+		    	 
 		     }
 		  }
 	}
 	
+	/**
+	 * This methods hides the folder
+	 * @param hiddenPath contains the directory path of the folder to be hidden
+	 */
 	private static void hideFolder(String hiddenPath){
 		String hiddenFolder[] = {"attrib","+h",hiddenPath};
 	
@@ -153,24 +197,24 @@ public class FileStorage {
 		}
 	}
 	
-	private static void write(String text, String pathName, boolean isAppend, boolean isNewLine){
+	/**
+	 * This methods writes the date into the storage file
+	 * @param text		the content to be written into the storage file
+	 * @param pathName	the directory path of the storage file
+	 * @param isAppend	true: append the data in the existing file / false: overwrite the existing file
+	 * @param isNewLine true: add a new line to the file / false: does not add a new line to the file
+	 */
+	private static void writeFile(String text, String pathName, boolean isAppend, boolean isNewLine){
 		File file = new File(pathName);
 		
 		if(!file.exists()){		
 			createFile(file);	
 		}
-		
-		
+			
 		try {
 			FileWriter fileWriter = new FileWriter(file, isAppend);
 			BufferedWriter bufferedWriter =new BufferedWriter(fileWriter);
-			
-			/*
-			if(isFileEmpty(file)){
-				bufferedWriter.write("");
-			}
-			*/
-			
+				
 			bufferedWriter.write(text);
 			
 			if(isNewLine == true){
@@ -180,9 +224,17 @@ public class FileStorage {
 			bufferedWriter.close();
 		}catch(IOException ex){
 			System.out.println("Error writing to file '"+ filePath + "'");
+		}finally{
+			
 		}
 	}
 	
+	/**
+	 * Retrieve and returns the current path directory of the storage file
+	 * which is store in path.txt
+	 * @param fileName the directory path that stores the path.txt
+	 * @return the directory path of the storage file
+	 */
 	private static String readPath(String fileName){
 	
 		String path = null;
@@ -197,6 +249,11 @@ public class FileStorage {
         return path;
 	}
 	
+	/**
+	 * Retrieve and return the content of the storage file
+	 * The content of the storage file is stored in a ArrayList<String>
+	 * @return the ArrayList<String> which contains the content of the storage file
+	 */
 	private static ArrayList<String> readFile(){
 		
 		String line = null;
@@ -217,43 +274,47 @@ public class FileStorage {
             System.out.println("Unable to open file '" + filePath + "'");                
         }catch(IOException ex) {
             System.out.println("Error reading file '" + filePath + "'");                   
+        }finally{
+        	
         }
         
         return list;
 	}
-	//Private methods
-	
+
+	/**
+	 * This methods retrieve and returns the content of the storage file which contains a particular key word
+	 * Create a hash map to map the original content of the storage file to its original sequence
+	 * Create a hash map to map the content which contains the key word in ascending order
+	 * Create a new FileData to store the two hash map
+	 * @param keyword the key word to find a specific content in the storage file
+	 * @return the FileData which contains the two hash map
+	 */
 	private static FileData searchFile(String keyword){
 		
 		String line = null;
 		ArrayList<String> list = readFile();	
-		TreeMap<String, Integer> originalMap = new TreeMap<String, Integer>();
-		
-		
-        
-        
-		TreeMap<Integer, String> displayMap = new TreeMap<Integer, String>();
 		ArrayList<String> keywordList = new ArrayList<String>();
+		HashMap<String, Integer> originalMap = new HashMap<String, Integer>();
+		HashMap<Integer, String> displayMap = new HashMap<Integer, String>();
+		FileData data;
 		
-		
-        try {
-        	
+        try {    	
             FileReader fileReader = new FileReader(filePath);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
-			
-			
+					
 			while((line = bufferedReader.readLine()) != null) {
 				if(line.contains(keyword)){
 					keywordList.add(line);
 				}
 			}			
             bufferedReader.close();   
-            
-            
+                     
         }catch(FileNotFoundException ex) {
             System.out.println("Unable to open file '" + filePath + "'");                
         }catch(IOException ex) {
             System.out.println("Error reading file '" + filePath + "'");                   
+        }finally{
+        	Collections.sort(keywordList);
         }
         
         for(int i=0; i<list.size(); i++){
@@ -264,51 +325,19 @@ public class FileStorage {
 			displayMap.put(i+1, keywordList.get(i));
 		}
         
-        FileData data = new FileData(originalMap, displayMap);
+        data = new FileData(originalMap, displayMap);
         
 		return data;
 	}
 	
-	private static boolean isFileEmpty(File fileName){
-		File file = fileName;
-
-		if(file.length() == 0){
-			return true;
-		}
-		else{
-			return false;
-		}
-	}
-	
-	private static String findLine(int numLine, String fileName){
-		String line = "";
 		
-		try{
-			FileReader fileReader = new FileReader(fileName);
-			BufferedReader bufferedReader = new BufferedReader(fileReader);
-            
-			for(int i=0; i<numLine; i++){
-				line = bufferedReader.readLine();
-			}
-			bufferedReader.close();   
-			
-			return line;
-			
-		}catch(FileNotFoundException ex) {
-            System.out.println("Unable to open file '" + fileName + "'");                
-        }catch(IOException ex) {
-            System.out.println("Error reading file '" + fileName + "'");                   
-        }
-		
-		return line;
-		
-	}
-	
 	/**
-	 * Open the text file and delete the nth line in the specfic text file
+	 * This methods delete the specific line in the storage file
+	 * @param numLine	the line number to be deleted
+	 * @param fileName	the directory of the storage file
 	 */
 	private static void deleteLine(int numLine, String fileName){
-		//String path = System.getProperty("java.class.path");	
+		
 		File currFile = new File(fileName);
 		File tempFile = new File(currFile.getAbsolutePath() + ".tmp");
 		String line = null;
@@ -348,39 +377,7 @@ public class FileStorage {
         }
 		
 	}
-	
-	private static boolean isValidNumLine(int numLine, String fileName){
-		String line = null;
-		int count = 0;
 		
-		try{
-			FileReader fileReader = new FileReader(fileName);
-
-			BufferedReader bufferedReader = new BufferedReader(fileReader);
-			
-			while((line = bufferedReader.readLine()) != null) {
-				count++;
-			} 
-			
-			bufferedReader.close();  
-			
-			if(count == 0){
-				return true;
-			}
-			else if(numLine > count){
-				return true;
-			}
-			else{
-				return false;
-			}
-		}catch(IOException ex) {
-            System.out.println("Error reading file '" + fileName + "'");                   
-            return true;
-        }
-	}
-	
-	
-	
 }
 
 

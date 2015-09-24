@@ -1,24 +1,39 @@
-import java.util.TreeMap;
+import java.util.HashMap;
 
 
 public class FileData {
 
-	private TreeMap<String, Integer> originalMap;
-	private TreeMap<Integer, String> displayMap;
+	private HashMap<String, Integer> originalMap;
+	private HashMap<Integer, String> displayMap;
 	
 	public FileData(){
-		
+		this.originalMap = null;
+		this.displayMap = null;
 	}
-	public FileData(TreeMap<String, Integer> originalMap, TreeMap<Integer, String> displayMap){
+	
+	/**
+	 * This constructors sets the originalMap and displayMap
+	 * @param originalMap	content in it's original sequence
+	 * @param displayMap	content in sorted sequence in ascending order 	
+	 */
+	public FileData(HashMap<String, Integer> originalMap, HashMap<Integer, String> displayMap){
 		this.originalMap = originalMap;
 		this.displayMap = displayMap;
 	}
 	
-	public TreeMap<String, Integer> getOriginalMap(){
+	/**
+	 * This methods returns the hash map contains the content in it's original sequence 
+	 * @return the HashMap<String, Integer>
+	 */
+	public HashMap<String, Integer> getOriginalMap(){
 		return originalMap;
 	}
 	
-	public TreeMap<Integer, String> getDisplayMap(){
+	/**
+	 * This methods returns the hash map contains the content in the sorted sequence in ascending order
+	 * @return the HashMap<Integer, String>
+	 */
+	public HashMap<Integer, String> getDisplayMap(){
 		return displayMap;
 	}
 }
