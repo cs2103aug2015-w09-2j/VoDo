@@ -280,5 +280,26 @@ public  class DateHandler {
 		return getDate(intDayOfMonth + "", intMonth + "", intYear + "");
 	}
 	
+	public static String tryParse(String strDate){
+		
+		String[] splitDate = strDate.split("/");
+		int intLengthOfSplit = splitDate.length;
+		if(intLengthOfSplit == 0 || intLengthOfSplit == 1){
+			return null;
+		} 	else if(intLengthOfSplit == 2){//probably only has day and month, missing year
+			String strYear = getStringYearNow();
+			return strDate + "/" + strYear;
+		}	else if(intLengthOfSplit == 3){
+			return strDate;
+		}
+		
+		
+		
+		return null;
+	}
+	
+	public static boolean isMonthWithinRange(int intMonth){
+		return intMonth >= 1 && intMonth <= 12;
+	}
 	
 }

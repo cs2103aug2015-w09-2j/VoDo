@@ -1,3 +1,5 @@
+import java.text.ParseException;
+
 /***
  * 
  * @author Razali
@@ -22,9 +24,54 @@ public class Parser {
 		
 		if(intIndex < 0 || intIndex >= words.length)
 			throw new IndexOutOfBoundsException();
-
+		
 		return words[intIndex];
 	}
+	
+	private static String removeNWords(int numOfWordsToRemove, String strText){
+		int intRemoved = 0;
+		String strWord;
+		
+		while(intRemoved != numOfWordsToRemove){
+			strWord = getWord(0, strText);
+			strText = strText.replace(strWord, "").trim();
+			intRemoved++;
+		}
+		
+		return strText;
+	}
+	
+	private static int getNumberOfWords(String strText){
+		return strText.split(" ").length;
+	}
+	
+	public static Task parse(String strCommand){
+		
+		CommandType.Types type = getCommandType(strCommand);
+		String strDescription;
+		DateClass startDate, endDate;
+		
+		switch(type){
+			
+		case ADD_DEADLINE:
+			strCommand = removeNWords(2, strCommand);
+			strDescription = getDescription(strCommand);
+			
+			strCommand = removeNWords(getNumberOfWords(strDescription), strCommand);
+			
+			endDate = getDate(strCommand);
+			
+			return new DeadLine(strDescription, endDate);
+			default:
+				return null;
+					
+		}
+	}
+	public static void main(String[] args){
+		String command = "add -d doing parser is shit job 25/3";
+		Task t = parse(command);
+	}
+	
 	
 	/***
 	 * Given the input command, returns you the type of command.
@@ -33,14 +80,15 @@ public class Parser {
 	 */
 	public static CommandType.Types getCommandType(String strCommand){
 		String strFirstWordFromCommand = getWord(0, strCommand);
+		strCommand = strCommand.replace(strFirstWordFromCommand, "").trim();
 		
 		switch(strFirstWordFromCommand){
 		
 			//After "add", we can have -e(Event) -f(Floating) or -d(DeadLine)
 			//We need to parse them by getting the 2nd word
 			case "add":
-				String strSecondWordFromCommand = getWord(1, strCommand);
-				CommandType.TaskTypes taskType = getTaskType(strSecondWordFromCommand);
+				String strNextWord = getWord(0, strCommand);
+				CommandType.TaskTypes taskType = getTaskType(strNextWord);
 				
 				//Match CommandType.TaskTypes to CommandType.Types
 				for(CommandType.Types type: CommandType.Types.values()){
@@ -80,8 +128,9 @@ public class Parser {
 		for(CommandType.TaskTypes taskType : CommandType.TaskTypes.values()){
 			String strTaskType = taskType.toString();
 			
-			if(strTaskType.equals(strDelimiter))
+			if(strTaskType.equals(strDelimiter)){
 				return taskType;
+			}
 		}
 		
 		return CommandType.TaskTypes.UNKNOWN;
@@ -89,13 +138,39 @@ public class Parser {
 	
 	
 	public static String getDescription(String strCommand){
-		return null;
+		StringBuilder sb = new StringBuilder();
+		int intWordIndex = 0;
+		
+		String strNextWord = getWord(intWordIndex, strCommand);
+		
+		while(DateHandler.tryParse(strNextWord) == null){
+			sb.append(strNextWord + " ");
+			intWordIndex++;
+			strNextWord = getWord(intWordIndex, strCommand);
+		}
+		
+		String strDescription = sb.toString().trim();
+		
+		return strDescription;
 	}
 	
 	
 	
-	public static String getDate(String strCommand){
+	public static DateClass getDate(String strCommand){
+		String strDate = getWord(0, strCommand);
+		
+		strDate = DateHandler.tryParse(strDate);
+		
+		
+		
+		try {
+			return new DateClass(strDate);
+		} catch (NoSuchFieldException | ParseException e) {
+			e.printStackTrace();
+		} 
+		
 		return null;
+		
 	}
 	
 	public static void getTime(String strCommand){

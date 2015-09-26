@@ -36,6 +36,17 @@ public class DateClass {
 		strYear = DateHandler.getStringYear(year);
 	}
 	
+	public DateClass(String strFullDate) throws NoSuchFieldException, ParseException{
+		String[] ddmmyy = strFullDate.split("/");
+		
+		intDay = Integer.valueOf(ddmmyy[0]);
+		intMonth = Integer.valueOf(ddmmyy[1]);
+		intYear = Integer.valueOf(ddmmyy[2]);
+		
+		strDay = DateHandler.getStringDay(intDay, intMonth, intYear);
+		strMonth = DateHandler.getStringMonth(intMonth);
+		strYear = DateHandler.getStringYear(intYear);
+	}
 	
 	public int getIntDay() {
 		return intDay;
