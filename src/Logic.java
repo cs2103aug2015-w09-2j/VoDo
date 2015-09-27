@@ -26,12 +26,5 @@ public class Logic {
 		}
 	return true;	
 	}
-
-	public CommandType.TaskTypes getCommand() {
-		return command;
-	}
-
-	public void setCommand(CommandType.TaskTypes command) {
-		this.command = command;
-	}
 }
+
