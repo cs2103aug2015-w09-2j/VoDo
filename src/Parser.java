@@ -45,33 +45,17 @@ public class Parser {
 		return strText.split(" ").length;
 	}
 	
-	public static Task parse(String strCommand){
+	public static CommandType.Types parse(String strCommand){
 		
 		CommandType.Types type = getCommandType(strCommand);
-		String strDescription;
-		DateClass startDate, endDate;
 		
-		switch(type){
-			
-		case ADD_DEADLINE:
-			strCommand = removeNWords(2, strCommand);
-			strDescription = getDescription(strCommand);
-			
-			strCommand = removeNWords(getNumberOfWords(strDescription), strCommand);
-			
-			endDate = getDate(strCommand);
-			
-			return new DeadLine(strDescription, endDate);
-			default:
-				return null;
-					
-		}
+		return type;
 	}
-	public static void main(String[] args){
-		String command = "add -d doing parser is shit job 25/3";
-		Task t = parse(command);
-	}
-	
+//public static void main(String[] args){
+//	String command = "add -f doing parser is shit job 25/3";
+//	Task t = parse(command);
+//}
+//
 	
 	/***
 	 * Given the input command, returns you the type of command.
