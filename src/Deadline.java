@@ -7,7 +7,6 @@ public class DeadLine extends Task{
 		super(description);
 		this.endDate = endDate;
 	}
-	
 	public DateClass getEndDate(){
 		return endDate;
 	}
