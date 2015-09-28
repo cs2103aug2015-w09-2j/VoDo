@@ -1,6 +1,5 @@
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.*;
 import java.util.*;
 
 
@@ -187,7 +186,7 @@ public  class DateHandler {
 	 */
 	public static int getIntMonth(String strMonth) {
 		strMonth = strMonth.toUpperCase();
-		return Month.valueOf(strMonth).getValue();
+		return java.time.Month.valueOf(strMonth).getValue();
 	}
 
 	/**
@@ -196,7 +195,7 @@ public  class DateHandler {
 	 * @return Month in string form ("January" to "December")
 	 */
 	public static String getStringMonth(int intMonth) {
-		return Month.of(intMonth).toString();
+		return java.time.Month.of(intMonth).toString();
 	}
 
 	/*** HANDLING OF YEARS ***/
