@@ -1,5 +1,11 @@
 
 public class Logic {
+	public String fileName;
+	public Logic(String filename){
+		fileName = filename;
+	}
+	public Logic(){
+	}	
 	private static FileStorage fileStorage = new FileStorage();
 	private static CommandType.Types command; 
 	

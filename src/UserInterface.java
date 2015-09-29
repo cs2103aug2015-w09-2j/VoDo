@@ -12,7 +12,7 @@ public class UserInterface {
 	private Logic vodoLogic;
 
 	public UserInterface(String fileName) {
-		vodoLogic = new vodoLogic(fileName);
+		vodoLogic = new Logic(fileName);
 	}
 
 	public void promptForCommand() {
