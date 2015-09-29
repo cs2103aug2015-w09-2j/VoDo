@@ -1,3 +1,4 @@
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -15,6 +16,10 @@ public class UserInterface {
 		vodoLogic = new Logic(fileName);
 	}
 
+	public UserInterface() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public void promptForCommand() {
 		printToUser(MESSAGE_PROMPT);
 	}
@@ -24,7 +29,7 @@ public class UserInterface {
 		return sc.nextLine();
 	}
 
-	public void processCommand(String command) {
+	public void processCommand(String command) throws NoSuchFieldException, ParseException {
 		boolean isSuccessful = Logic.processCommand(command);
 		if (isSuccessful) {
 			printToUser(MESSAGE_VALID_COMMAND);
@@ -43,7 +48,7 @@ public class UserInterface {
 		}
 	}
 
-	public void run() {
+	public void run() throws NoSuchFieldException, ParseException {
 		String command;
 		while (true) {
 			printToUser(MESSAGE_WELCOME);

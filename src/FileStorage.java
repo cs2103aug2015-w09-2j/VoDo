@@ -284,7 +284,7 @@ public class FileStorage {
 	
 	
 	@SuppressWarnings("unused")
-	private static ArrayList<Task> readTaskFromFile() throws NoSuchFieldException, ParseException{
+	public static ArrayList<Task> readTaskFromFile() throws NoSuchFieldException, ParseException{
 		
 		String line = null;
         ArrayList<Task> tasks = new ArrayList<Task>();

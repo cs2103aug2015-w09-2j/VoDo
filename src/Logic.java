@@ -1,3 +1,4 @@
+import java.text.ParseException;
 
 public class Logic {
 	public String fileName;
@@ -6,21 +7,21 @@ public class Logic {
 	}
 	public Logic(){
 	}	
+	private static UserInterface UI = new UserInterface();
 	private static FileStorage fileStorage = new FileStorage();
 	private static CommandType.Types command; 
 	
-	@SuppressWarnings("unused")
-	public static boolean processCommand(String input){
+	public static boolean processCommand(String input) throws NoSuchFieldException, ParseException{
 		command = Parser.parse(input);
 		if(command == CommandType.Types.UNKNOWN){
 			return false;
 		}else{
-		executeCommand(command,input);
+			executeCommand(command,input);
 		}
 		return true;
 	}
 	
-	private static boolean executeCommand(CommandType.Types command,String input){
+	private static boolean executeCommand(CommandType.Types command,String input) throws NoSuchFieldException, ParseException{
 		boolean success = false;
 		switch(command){
 		case ADD_EVENT :
@@ -44,6 +45,9 @@ public class Logic {
 		case DELETE:	
 			success=true;
 			break;
+		case DISPLAY:	
+			UI.displayView(FileStorage.readTaskFromFile());
+			success=true;
 		default:
 			break;		
 		}
