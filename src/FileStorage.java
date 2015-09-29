@@ -3,6 +3,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.ParseException;
 
 
 public class FileStorage {
@@ -282,7 +283,8 @@ public class FileStorage {
 	}
 	
 	
-	private static ArrayList<Task> readTaskFromFile(){
+	@SuppressWarnings("unused")
+	private static ArrayList<Task> readTaskFromFile() throws NoSuchFieldException, ParseException{
 		
 		String line = null;
         ArrayList<Task> tasks = new ArrayList<Task>();
@@ -293,7 +295,21 @@ public class FileStorage {
 			
 			
 			while((line = bufferedReader.readLine()) != null) {
-				//tasks.add(new Event());
+				String taskLine[] = line.split(" ");
+				switch(taskLine[0]){
+				case "Event":
+					Event event = new Event(taskLine[1],new DateClass(taskLine[2]),new DateClass(taskLine[3]));
+					tasks.add(event);
+					break;
+				case "DeadLine":
+					DeadLine deadline = new DeadLine(taskLine[1],new DateClass(taskLine[2]));
+					tasks.add(deadline);
+					break;
+				case "Floating":
+					Floating floating = new Floating(taskLine[1]);
+					tasks.add(floating);
+					break;
+				}
 			}			
             bufferedReader.close();   
             
