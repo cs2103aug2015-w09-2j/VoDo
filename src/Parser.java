@@ -157,8 +157,17 @@ public class Parser {
 		
 	}
 	
-	public static void getTime(String strCommand){
-		return;
+	public static TimeClass getTime(String strCommand){
+		String[] strSplitWords = strCommand.split(" ");
+		TimeClass time = null;
+		
+		for(String word : strSplitWords){
+			if((time = TimeHandler.parse(word)) != null){
+				return time;
+			}
+		}
+		
+		return time;
 	}
 
 	
