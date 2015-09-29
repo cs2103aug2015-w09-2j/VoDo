@@ -4,7 +4,7 @@ public class Logic {
 	private static CommandType.Types command; 
 	
 	@SuppressWarnings("unused")
-	private static boolean processCommand(String input){
+	public static boolean processCommand(String input){
 		command = Parser.parse(input);
 		if(command == CommandType.Types.UNKNOWN){
 			return false;

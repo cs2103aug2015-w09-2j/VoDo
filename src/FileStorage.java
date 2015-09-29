@@ -280,6 +280,36 @@ public class FileStorage {
         
         return list;
 	}
+	
+	
+	private static ArrayList<Task> readTaskFromFile(){
+		
+		String line = null;
+        ArrayList<Task> tasks = new ArrayList<Task>();
+        try {
+        	
+            FileReader fileReader = new FileReader(filePath);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+			
+			
+			while((line = bufferedReader.readLine()) != null) {
+				//tasks.add(new Event());
+			}			
+            bufferedReader.close();   
+            
+            
+        }catch(FileNotFoundException ex) {
+            System.out.println("Unable to open file '" + filePath + "'");                
+        }catch(IOException ex) {
+            System.out.println("Error reading file '" + filePath + "'");                   
+        }finally{
+        	
+        }
+        
+        return tasks;
+	}
+	
+	
 
 	/**
 	 * This methods retrieve and returns the content of the storage file which contains a particular key word
